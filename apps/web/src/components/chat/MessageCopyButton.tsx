@@ -22,7 +22,10 @@ const onCopy = (ref: React.RefObject<HTMLButtonElement | null>) => {
   }
 };
 
-const onCopyError = (ref: React.RefObject<HTMLButtonElement | null>, error: Error) => {
+const onCopyError = (
+  ref: React.RefObject<HTMLButtonElement | null>,
+  error: Error,
+) => {
   if (ref.current) {
     anchoredToastManager.add({
       data: {
@@ -41,7 +44,7 @@ const onCopyError = (ref: React.RefObject<HTMLButtonElement | null>, error: Erro
 export const MessageCopyButton = memo(function MessageCopyButton({
   text,
   size = "xs",
-  variant = "outline",
+  variant = "ghost",
   className,
 }: {
   text: string;
@@ -72,7 +75,11 @@ export const MessageCopyButton = memo(function MessageCopyButton({
           />
         }
       >
-        {isCopied ? <CheckIcon className="size-3 text-success" /> : <CopyIcon className="size-3" />}
+        {isCopied ? (
+          <CheckIcon className="size-3 text-success" />
+        ) : (
+          <CopyIcon className="size-3" />
+        )}
       </TooltipTrigger>
       <TooltipPopup>
         <p>Copy to clipboard</p>

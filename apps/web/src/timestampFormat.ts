@@ -7,7 +7,7 @@ export function getTimestampFormatOptions(
   const baseOptions: Intl.DateTimeFormatOptions = {
     hour: "numeric",
     minute: "2-digit",
-    ...(includeSeconds ? { second: "2-digit" } : {}),
+    // ...(includeSeconds ? { second: "2-digit" } : {}),
   };
 
   if (timestampFormat === "locale") {
@@ -40,12 +40,20 @@ function getTimestampFormatter(
   return formatter;
 }
 
-export function formatTimestamp(isoDate: string, timestampFormat: TimestampFormat): string {
+export function formatTimestamp(
+  isoDate: string,
+  timestampFormat: TimestampFormat,
+): string {
   return getTimestampFormatter(timestampFormat, true).format(new Date(isoDate));
 }
 
-export function formatShortTimestamp(isoDate: string, timestampFormat: TimestampFormat): string {
-  return getTimestampFormatter(timestampFormat, false).format(new Date(isoDate));
+export function formatShortTimestamp(
+  isoDate: string,
+  timestampFormat: TimestampFormat,
+): string {
+  return getTimestampFormatter(timestampFormat, false).format(
+    new Date(isoDate),
+  );
 }
 
 /**
@@ -53,7 +61,10 @@ export function formatShortTimestamp(isoDate: string, timestampFormat: Timestamp
  * Returns `{ value: "20s", suffix: "ago" }` or `{ value: "just now", suffix: null }`
  * so callers can style the numeric portion independently.
  */
-export function formatRelativeTime(isoDate: string): { value: string; suffix: string | null } {
+export function formatRelativeTime(isoDate: string): {
+  value: string;
+  suffix: string | null;
+} {
   const diffMs = Date.now() - new Date(isoDate).getTime();
   if (diffMs < 0) return { value: "just now", suffix: null };
   const seconds = Math.floor(diffMs / 1000);
@@ -68,14 +79,19 @@ export function formatRelativeTime(isoDate: string): { value: string; suffix: st
 
 export function formatRelativeTimeLabel(isoDate: string) {
   const relative = formatRelativeTime(isoDate);
-  return relative.suffix ? `${relative.value} ${relative.suffix}` : relative.value;
+  return relative.suffix
+    ? `${relative.value} ${relative.suffix}`
+    : relative.value;
 }
 
 /**
  * Relative elapsed duration since an ISO instant, without an "ago" suffix.
  * Useful for labels like "Connected for 3m".
  */
-export function formatElapsedDurationLabel(isoDate: string, nowMs: number = Date.now()): string {
+export function formatElapsedDurationLabel(
+  isoDate: string,
+  nowMs: number = Date.now(),
+): string {
   const diffMs = nowMs - new Date(isoDate).getTime();
   if (diffMs <= 0) return "just now";
 
@@ -96,7 +112,10 @@ export function formatElapsedDurationLabel(isoDate: string, nowMs: number = Date
 /**
  * Relative time until an ISO instant (e.g. expiry). Mirrors {@link formatRelativeTime} but for future times.
  */
-export function formatRelativeTimeUntil(isoDate: string): { value: string; suffix: string | null } {
+export function formatRelativeTimeUntil(isoDate: string): {
+  value: string;
+  suffix: string | null;
+} {
   const diffMs = new Date(isoDate).getTime() - Date.now();
   if (diffMs <= 0) return { value: "Expired", suffix: null };
   const seconds = Math.floor(diffMs / 1000);
@@ -112,14 +131,19 @@ export function formatRelativeTimeUntil(isoDate: string): { value: string; suffi
 
 export function formatRelativeTimeUntilLabel(isoDate: string): string {
   const relative = formatRelativeTimeUntil(isoDate);
-  return relative.suffix ? `${relative.value} ${relative.suffix}` : relative.value;
+  return relative.suffix
+    ? `${relative.value} ${relative.suffix}`
+    : relative.value;
 }
 
 /**
  * Countdown for a future instant (e.g. link expiry): "Expires in 4m 12s", with second precision under one hour.
  * Pass `nowMs` when a parent tick drives re-renders so the diff matches that snapshot.
  */
-export function formatExpiresInLabel(isoDate: string, nowMs: number = Date.now()): string {
+export function formatExpiresInLabel(
+  isoDate: string,
+  nowMs: number = Date.now(),
+): string {
   const diffMs = new Date(isoDate).getTime() - nowMs;
   if (diffMs <= 0) return "Expired";
 
@@ -130,7 +154,9 @@ export function formatExpiresInLabel(isoDate: string, nowMs: number = Date.now()
   if (totalSeconds < 3600) {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    return seconds === 0 ? `Expires in ${minutes}m` : `Expires in ${minutes}m ${seconds}s`;
+    return seconds === 0
+      ? `Expires in ${minutes}m`
+      : `Expires in ${minutes}m ${seconds}s`;
   }
 
   if (totalSeconds < 86_400) {
@@ -155,5 +181,7 @@ export function formatExpiresInLabel(isoDate: string, nowMs: number = Date.now()
   if (hours > 0) tail.push(`${hours}h`);
   if (minutes > 0) tail.push(`${minutes}m`);
   if (seconds > 0) tail.push(`${seconds}s`);
-  return tail.length > 0 ? `Expires in ${days}d ${tail.join(" ")}` : `Expires in ${days}d`;
+  return tail.length > 0
+    ? `Expires in ${days}d ${tail.join(" ")}`
+    : `Expires in ${days}d`;
 }
