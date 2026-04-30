@@ -271,7 +271,7 @@ export default function ProjectScriptsControl({
       {primaryScript ? (
         <Group aria-label="Project scripts">
           <Button
-            size="xs"
+            size="sm"
             variant="outline"
             onClick={() => onRunScript(primaryScript)}
             title={`Run ${primaryScript.name}`}

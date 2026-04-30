@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { useSettingsRestore } from "../components/settings/SettingsPanels";
 import { Button } from "../components/ui/button";
-import { SidebarInset, SidebarTrigger } from "../components/ui/sidebar";
+import { SidebarInset, SidebarTrigger, useSidebar } from "../components/ui/sidebar";
 import { isElectron } from "../env";
 
 function RestoreDefaultsButton({ onRestored }: { onRestored: () => void }) {
@@ -25,9 +25,11 @@ function RestoreDefaultsButton({ onRestored }: { onRestored: () => void }) {
 
 function SettingsContentLayout() {
   const location = useLocation();
+  const { isMobile, open, openMobile } = useSidebar();
   const [restoreSignal, setRestoreSignal] = useState(0);
   const showRestoreDefaults = location.pathname === "/settings/general";
   const handleRestored = () => setRestoreSignal((value) => value + 1);
+  const sidebarOpen = isMobile ? openMobile : open;
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -50,7 +52,7 @@ function SettingsContentLayout() {
         {!isElectron && (
           <header className="border-b border-border px-3 py-2 sm:px-5">
             <div className="flex min-h-7 items-center gap-2 sm:min-h-6">
-              <SidebarTrigger className="size-7 shrink-0 md:hidden" />
+              {!sidebarOpen ? <SidebarTrigger className="size-7 shrink-0" /> : null}
               <span className="text-sm font-medium text-foreground">Settings</span>
               {showRestoreDefaults ? (
                 <div className="ms-auto flex items-center gap-2">
