@@ -376,15 +376,19 @@ function TimelineRowContent({ row }: { row: TimelineRow }) {
                   />
                 )}
               </div>
-              <div className="flex items-center gap-1.5 mt-1.5 opacity-0 transition-opacity duration-200 focus-within:opacity-100 group-hover:opacity-100">
+              <div className="flex items-center gap-1.5 mt-1.5">
                 {displayedUserMessage.copyText && (
-                  <MessageCopyButton text={displayedUserMessage.copyText} />
+                  <MessageCopyButton
+                    className="transition-opacity duration-200 opacity-0 focus-within:opacity-100 group-hover:opacity-100"
+                    text={displayedUserMessage.copyText}
+                  />
                 )}
                 {canRevertAgentWork && (
                   <Button
                     type="button"
                     size="xs"
                     variant="ghost"
+                    className="transition-opacity duration-200 opacity-0 focus-within:opacity-100 group-hover:opacity-100"
                     disabled={ctx.isRevertingCheckpoint || ctx.isWorking}
                     onClick={() => ctx.onRevertUserMessage(row.message.id)}
                     title="Revert to this message"
